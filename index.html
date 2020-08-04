@@ -1,0 +1,122 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Pin Generator</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="pin-generator half-width">
+                            <input id="inputBar" class="form-control" type="text">
+                            <button id="generatePin" class="generate-btn">Generate Pin</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-section half-width">
+                            <input id="outputBar" class="form-control" type="text" >
+                            <div class="numbers">
+                                <div class="calc-body">
+                                    <div class="calc-button-row">
+                                    <div  class="button"  onclick="showDigit(7)" >7</div>
+                                    <div class="button"  onclick="showDigit(8)">8</div>
+                                    <div  class="button"  onclick="showDigit(9)">9</div>
+                                    </div>
+                                    <div class="calc-button-row">
+                                    <div  class="button"  onclick="showDigit(4)">4</div>
+                                    <div class="button"  onclick="showDigit(5)">5</div>
+                                    <div class="button"  onclick="showDigit(6)">6</div>
+                                    </div>
+                                    <div class="calc-button-row">
+                                    <div class="button" onclick="showDigit(1)" >1</div>
+                                    <div class="button"  onclick="showDigit(2)">2</div>
+                                    <div  class="button"  onclick="showDigit(3)">3</div>
+                                    </div>
+                                    <div class="calc-button-row">
+                                        <div class="button" onclick="removeFromLast()"><</div>
+                                        <div class="button" onclick="showDigit(0)">0</div>
+                                        <div class="button" onclick="clearScreen()">C</div>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="submit-btn" id="submitButton" onclick="isSame()">Submit</button>
+                                        <p class="action-left"><span id="tryLeft">3</span> try left</p>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="notify-section">
+                    <p id="unMatched" class="notify">❌ Pin Didn't Match, Please try again</p>
+                    <p id="matched" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+                </div>
+            </div>
+            <script>
+            
+                document.getElementById('generatePin').addEventListener("click",function(){   
+                    let number = Math.floor(Math.random() * (9999 - 1000) ) + 1000;
+                    document.getElementById('inputBar').value=number;
+                    document.getElementById('outputBar').value="";
+
+                    if(document.getElementById('tryLeft').innerText==0){
+                        disabled();
+                    }
+                    else{
+                        document.getElementById('tryLeft').innerText=3;
+                    }
+                    showSmallQuote('none','none');
+                })
+
+                function showSmallQuote(firstValue,secondValue){
+                    document.getElementById('matched').style.display=firstValue;
+                    document.getElementById('unMatched').style.display=secondValue;
+                }
+
+                function showDigit(digit){
+                    document.getElementById('outputBar').value = document.getElementById('outputBar').value + digit;
+                }  
+
+                function isSame(){
+                    if(document.getElementById('inputBar').value=="" || document.getElementById('outputBar').value==""){
+                        showSmallQuote('none','none');
+                        alert("please fill the input first"); 
+                    }
+                    else if(document.getElementById('inputBar').value==document.getElementById('outputBar').value){ 
+                        showSmallQuote('block','none');
+                    }
+            
+                    else{
+                        showSmallQuote('none','block');
+                        let tryLeftNumber=document.getElementById('tryLeft').innerText;
+                        let number=parseInt(tryLeftNumber);  
+                        if(number==1){
+                            disabled();
+                        }
+                        number=number-1;
+                        document.getElementById('tryLeft').innerText=number;
+                    }
+                }
+                function disabled(){
+                    document.getElementById('submitButton').disabled = true;
+                    document.getElementById('submitButton').style.background="red";
+                    document.getElementById('submitButton').innerText="Disabled";
+
+                }
+            
+                function clearScreen(){
+                    document.getElementById('outputBar').value="";
+                    showSmallQuote('none','none');
+                }
+
+                function removeFromLast(){
+                    document.getElementById('outputBar').value = document.getElementById('outputBar').value.slice(0,-1);
+                    showSmallQuote('none','none');
+                }
+
+            </script>
+
+        </body>
+        </html>
